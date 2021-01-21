@@ -34,7 +34,7 @@ t_means AS (
 )
 SELECT 
 	* , 
-	abs(TD - TN) AS "T_ND"
+	abs("TD" - "TN") AS "T_ND"
 FROM t_means
 )
 
