@@ -2,29 +2,41 @@
 DROP VIEW IF EXISTS temperature;
 CREATE VIEW temperature AS(
 WITH term_11 AS (
-	SELECT * FROM data AS d
-	JOIN metadata m ON m.id=d.meta_id 
+	SELECT 
+		* 
+	FROM data AS d
+	JOIN metadata AS m ON m.id=d.meta_id 
 	WHERE m.term_id=11
 	AND m.device_id='10347367')
 ,
 disc_device AS (
-	SELECT DISTINCT device_id FROM term_11
-	)
-,
+	SELECT DISTINCT device_id 
+	FROM term_11
+),
 t_means AS (
 	SELECT
 		device_id,
-		(SELECT avg(value) AS mean_temp FROM term_11
-		WHERE dd.device_id=term_11.device_id),
-		(SELECT avg(value) AS day_mean FROM term_11
-		 WHERE date_part('hour', tstamp)>= 6 AND date_part('hour', tstamp) < 18
-		 AND dd.device_id=term_11.device_id),
-		 (SELECT avg(value) AS night_mean FROM term_11
-		 WHERE NOT (date_part('hour', tstamp)>= 6 AND date_part('hour', tstamp) < 18)
-		 AND dd.device_id=term_11.device_id)
+		(
+			SELECT 
+			avg(value) AS mean_temp 
+			FROM term_11
+			WHERE dd.device_id=term_11.device_id),
+		(
+			SELECT 
+			avg(value) AS day_mean 
+			FROM term_11
+			WHERE date_part('hour', tstamp)>= 6 AND date_part('hour', tstamp) < 18
+			AND dd.device_id=term_11.device_id),
+		(
+			SELECT avg(value) AS night_mean 
+			FROM term_11
+			WHERE NOT (date_part('hour', tstamp)>= 6 AND date_part('hour', tstamp) < 18)
+			AND dd.device_id=term_11.device_id)
 	FROM disc_device dd
-	)
-SELECT * , abs(day_mean - night_mean) AS t_ND
+)
+SELECT 
+	* , 
+	abs(day_mean - night_mean) AS t_ND
 FROM t_means)
 
 
