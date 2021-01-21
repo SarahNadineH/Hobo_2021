@@ -15,27 +15,30 @@ t_means AS (
 	SELECT
 		device_id,
 		(
-			SELECT avg(value) AS Tavg FROM term_11
+			SELECT avg(value) AS "Tavg" 
+			FROM term_11
 			WHERE dd.device_id=term_11.device_id
 		),
 		(
-			SELECT avg(value) AS TD FROM term_11
+			SELECT avg(value) AS "TD" 
+			FROM term_11
 		 	WHERE date_part('hour', tstamp)>= 6 AND date_part('hour', tstamp) < 18
 		 	AND dd.device_id=term_11.device_id
 		),
 		 (
-			 SELECT avg(value) AS TN FROM term_11
+			 SELECT avg(value) AS "TN" 
+			 FROM term_11
 			 WHERE NOT (date_part('hour', tstamp)>= 6 AND date_part('hour', tstamp) < 18)
 		 	 AND dd.device_id=term_11.device_id)
 	FROM disc_device dd
 )
 SELECT 
 	* , 
-	abs(TD - TN) AS t_ND
+	abs(TD - TN) AS "T_ND"
 FROM t_means
 )
 
--Correaltion 
+--Correaltion 
 DROP VIEW IF EXISTS correlation_2;
 CREATE VIEW correlation_2 AS (
 WITH meta21 AS (
@@ -59,7 +62,7 @@ indices AS (
 	SELECT 
 		meta21.id, 								
 		avg(d.value) AS "mean",					
-		corr(d.norm, d20.norm) AS "Tcorr1Y"	,
+		corr(d.norm, d20.norm) AS "Tcorr1Y",
 		corr(d.norm, d19.norm) AS "Tcorr2Y"	
 	FROM data_norm AS d													
 	JOIN meta21 on meta21.id = d.meta_id		
@@ -84,10 +87,10 @@ DROP VIEW IF EXISTS temperature_indices;
 CREATE VIEW temperature_indices AS (
 SELECT 
 	temp1.device_id,
-	tavg,
-	td,
-	tn,
-	t_nd,
+	"Tavg", 
+	"TD",
+	"TN",
+	"T_ND",
 	cor2."Tcorr1Y",
 	cor2."Tcorr2Y"
 FROM temp1
