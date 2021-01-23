@@ -134,8 +134,8 @@ CROSS JOIN corr_19_21
 )
 
 --Final view of all indices
-DROP VIEW IF EXISTS temperature_indices;
-CREATE VIEW temperature_indices AS (
+DROP VIEW IF EXISTS temperature_indices_1;
+CREATE VIEW temperature_indices_1 AS (
 SELECT 
 *
 FROM temperature
